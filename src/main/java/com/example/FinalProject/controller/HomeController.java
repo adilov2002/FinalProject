@@ -1,6 +1,7 @@
 package com.example.FinalProject.controller;
 
 import com.example.FinalProject.entities.Categories;
+import com.example.FinalProject.entities.CustomLog;
 import com.example.FinalProject.entities.Places;
 import com.example.FinalProject.service.MainService;
 import com.example.FinalProject.service.MessageService;
@@ -9,10 +10,7 @@ import lombok.SneakyThrows;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.util.ArrayList;
 
 @Path(value = "/")
@@ -49,6 +47,15 @@ public class HomeController {
     @PermitAll
     public String getAllMessages(){
         return messageService.getMessage();
+    }
+
+    @SneakyThrows
+    @GET
+    @Produces(value = "plain/text")
+    @Path(value = "/messages")
+    @PermitAll
+    public ArrayList<CustomLog> getAllLogs(){
+        return messageService.getAllLogs();
     }
 
     @GET

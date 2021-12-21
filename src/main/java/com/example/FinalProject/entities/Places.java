@@ -25,7 +25,7 @@ public class Places {
     private String address;
 
     @Column(name = "description")
-    private String description = "No description";
+    private String description = "{ No description }";
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Categories category;
