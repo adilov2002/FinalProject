@@ -26,6 +26,14 @@ public class MainService {
         return placesRepository.addPlace(place);
     }
 
+    public Boolean deletePlace(Long id){
+        return placesRepository.deletePlaceById(id);
+    }
+
+    public Boolean updatePlace(Places place){
+        return placesRepository.updatePlace(place);
+    }
+
     public ArrayList<Categories> getAllCategories(){
         return categoryRepository.getAllCategories();
     }

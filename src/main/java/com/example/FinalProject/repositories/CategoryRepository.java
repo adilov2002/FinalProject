@@ -27,7 +27,9 @@ public class CategoryRepository {
                 String name = set.getString("name");
                 categories.add(new Categories(id, name));
             }
-        }catch (Exception ignored){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return categories;
     }
 

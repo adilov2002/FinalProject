@@ -56,10 +56,13 @@ values (1, 'admin', 'admin', 1),
        (2, '111', 'armanS', 2),
        (3, '111', 'armanT', 2),
        (4, '111', 'armanJ', 2),
-       (5, '111', 'armanC', 2);
+       (5, '111', 'armanC', 2),
+       (6, '111', 'armanST', 2);
 
 insert into public.t_users_t_groups (users_id, groups_id)
 VALUES (2, 1),
        (3, 2),
        (4, 3),
-       (5, 4);
+       (5, 4),
+       (6, 1),
+       (6, 2);

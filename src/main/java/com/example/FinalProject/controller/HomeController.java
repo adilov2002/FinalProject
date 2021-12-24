@@ -14,7 +14,7 @@ import javax.ws.rs.*;
 import java.util.ArrayList;
 
 @Path(value = "/")
-@RolesAllowed({"ADMIN", "USER"})
+@RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
 public class HomeController {
 
     @EJB
@@ -35,9 +35,25 @@ public class HomeController {
     @POST
     @Produces(value = "plain/text")
     @Path(value = "/places")
-    @RolesAllowed("ADMIN")
+    @RolesAllowed("ROLE_ADMIN")
     public String addPlace(Places place){
-        return service.addNewPlace(place) ? messageService.sendJmsLoggingMessage(place) : "failed adding place";
+        return service.addNewPlace(place) ? messageService.sendJmsLoggingMessage(place, "add") : "failed adding place";
+    }
+
+    @DELETE
+    @Produces(value = "plain/text")
+    @Path(value = "/places/{id}")
+    @RolesAllowed("ROLE_ADMIN")
+    public String deletePlace(@PathParam("id") Long id){
+        return service.deletePlace(id) ? messageService.sendJmsLoggingMessage(id, "delete") : "failed deleting place";
+    }
+
+    @PUT
+    @Produces(value = "plain/text")
+    @Path(value = "/places")
+    @RolesAllowed("ROLE_ADMIN")
+    public String updatePlace(Places place){
+        return service.updatePlace(place) ? messageService.sendJmsLoggingMessage(place, "update") : "failed updating place";
     }
 
     @SneakyThrows

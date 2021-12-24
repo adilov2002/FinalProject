@@ -25,7 +25,9 @@ public class LogRepository {
                 String log = set.getString("log");
                 customLogs.add(new CustomLog(id, log));
             }
-        } catch (Exception ignored){}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return customLogs;
     }
 
@@ -39,7 +41,9 @@ public class LogRepository {
             res = statement.executeUpdate();
 
             statement.close();
-        } catch (Exception ignored){}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return res > 0;
     }
 

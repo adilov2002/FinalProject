@@ -10,13 +10,13 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Stateless
 public class MessageService {
 
-    @EJB
-    private LogRepository logRepository;
+    private LogRepository logRepository = new LogRepository();
 
     private final static Gson gson = new Gson();
     private final ArrayList<String> logging = new ArrayList<>();
@@ -32,7 +32,7 @@ public class MessageService {
     @Resource
     private ConnectionFactory connectionFactory;
 
-    public String sendJmsLoggingMessage(Places place){
+    public String sendJmsLoggingMessage(Object object, String type){
         try {
             connection = connectionFactory.createConnection();
             session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
@@ -40,11 +40,19 @@ public class MessageService {
 
             connection.start();
 
-            jmsMessage = session.createTextMessage("added place " + place.getData());
+            if (type.equals("add")){
+                Places place = (Places) object;
+                jmsMessage = session.createTextMessage("added place " + place.getData() + " on: [" + LocalDate.now() + "]");
+            } else if (type.equals("update")){
+                Places place = (Places) object;
+                jmsMessage = session.createTextMessage("updated place with id {"+place.getId()+"} values: " + place.getData() + " on: [" + LocalDate.now() + "]");
+            } else if (type.equals("delete")){
+                jmsMessage = session.createTextMessage("deleted place by id {"+object+"} on: [" + LocalDate.now() + "]");
+            }
             producer.send(jmsMessage);
-            if (jmsMessage == null){
-                logging.add(String.valueOf(jmsMessage));
-                logRepository.addCustomLog(new CustomLog(null, String.valueOf(jmsMessage)));
+            if (jmsMessage != null){
+                logging.add(((TextMessage) jmsMessage).getText());
+                logRepository.addCustomLog(new CustomLog(null, ((TextMessage) jmsMessage).getText()));
             }
 
             return "success";
@@ -52,6 +60,27 @@ public class MessageService {
             throw new RuntimeException("Caught exception from JMS when sending a message", e);
         }
     }
+
+    public String sendJmsLoggingMessageId(Long id){
+        try {
+            connection = connectionFactory.createConnection();
+            session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            producer = session.createProducer(messageQueue);
+
+            connection.start();
+
+            producer.send(jmsMessage);
+            if (jmsMessage != null){
+                logging.add(((TextMessage) jmsMessage).getText());
+                logRepository.addCustomLog(new CustomLog(null, ((TextMessage) jmsMessage).getText()));
+            }
+
+            return "success";
+        } catch (final Exception e){
+            throw new RuntimeException("Caught exception from JMS when sending a message", e);
+        }
+    }
+
 
     public String getMessage() throws JMSException {
         try {

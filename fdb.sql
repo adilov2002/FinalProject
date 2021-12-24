@@ -268,7 +268,7 @@ CREATE TABLE public.t_users
 (
     id       bigint                 NOT NULL primary key,
     password character varying(255) NOT NULL,
-    username character varying(255) NOT NULL,
+    username character varying(255) NOT NULL unique ,
     role_id  bigint,
     foreign key (role_id) references public.t_roles (id)
 );

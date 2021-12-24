@@ -35,7 +35,9 @@ public class PlacesRepository {
                 Categories category = categoryRepository.getCategoryById(categoryId);
                 places.add(new Places(id, name, address, description, category));
             }
-        }catch (Exception ignored){}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return places;
     }
 
@@ -43,7 +45,7 @@ public class PlacesRepository {
         int res = 0;
         try {
             PreparedStatement statement = connection.prepareStatement("" +
-                    "insert into t_places (id, address, description, name, category_id) values (DEFAULT, ?, ?, ?, ?) ");
+                    "insert into t_places (id, address, description, name, category_id) values ("+place.getId()+", ?, ?, ?, ?) ");
             statement.setString(1, place.getAddress());
             statement.setString(2, place.getDescription());
             statement.setString(3, place.getName());
@@ -52,8 +54,45 @@ public class PlacesRepository {
             res = statement.executeUpdate();
 
             statement.close();
-        } catch (Exception ignored) { }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return res > 0;
     }
 
+    public boolean deletePlaceById(Long id){
+        int res = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "delete from t_places where id = ? ");
+            statement.setLong(1, id);
+
+            res = statement.executeUpdate();
+
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0;
+    }
+
+    public boolean updatePlace(Places place){
+        int res = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "update t_places set address = ?, description = ?, name = ?, category_id = ? where id = ? ");
+            statement.setString(1, place.getAddress());
+            statement.setString(2, place.getDescription());
+            statement.setString(3, place.getName());
+            statement.setLong(4, place.getCategory().getId());
+            statement.setLong(5, place.getId());
+
+            res = statement.executeUpdate();
+
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0;
+    }
 }
