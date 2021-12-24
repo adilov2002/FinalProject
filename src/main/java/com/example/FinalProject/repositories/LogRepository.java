@@ -33,7 +33,7 @@ public class LogRepository {
         int res = 0;
         try{
             PreparedStatement statement = connection.prepareStatement("" +
-                    "insert into t_suctomlog (log) values (?) ");
+                    "insert into t_customlog (log) values (?) ");
             statement.setString(1, customLog.getLog());
 
             res = statement.executeUpdate();
