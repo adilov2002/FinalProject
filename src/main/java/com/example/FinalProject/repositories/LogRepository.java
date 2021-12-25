@@ -25,7 +25,9 @@ public class LogRepository {
                 String log = set.getString("log");
                 customLogs.add(new CustomLog(id, log));
             }
-        } catch (Exception ignored){}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return customLogs;
     }
 
@@ -33,13 +35,15 @@ public class LogRepository {
         int res = 0;
         try{
             PreparedStatement statement = connection.prepareStatement("" +
-                    "insert into t_suctomlog (log) values (?) ");
+                    "insert into t_customlog (log) values (?) ");
             statement.setString(1, customLog.getLog());
 
             res = statement.executeUpdate();
 
             statement.close();
-        } catch (Exception ignored){}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return res > 0;
     }
 
