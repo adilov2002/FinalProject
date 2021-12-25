@@ -95,4 +95,26 @@ public class PlacesRepository {
         }
         return res > 0;
     }
+
+    public ArrayList<Places> getPlacesByCategoryId(Long id){
+        ArrayList<Places> places = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "select * from t_places where category_id = ? ");
+            statement.setLong(1, id);
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                Long id1 = set.getLong("id");
+                String address = set.getString("address");
+                String description = set.getString("description");
+                String name = set.getString("name");
+                Long categoryId = set.getLong("category_id");
+                Categories category = categoryRepository.getCategoryById(categoryId);
+                places.add(new Places(id1, name, address, description, category));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return places;
+    }
 }

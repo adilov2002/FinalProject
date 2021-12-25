@@ -43,4 +43,64 @@ public class UsersRepostiory {
         }
         return users;
     }
+
+    public boolean addUser(Users user){
+        int res = 0;
+        boolean addGroups = false;
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "insert into t_users values (?, ?, ?, ?)");
+            statement.setLong(1, user.getId());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getUsername());
+            statement.setLong(4, user.getRole().getId());
+
+            res = statement.executeUpdate();
+
+            addGroups = usersGroupsRepository.addGroupsForUserId(user.getId(), user.getGroups());
+
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0 && addGroups;
+    }
+
+
+    public boolean deleteUserById(Long id){
+        int res = 0;
+        try {
+            if (usersGroupsRepository.deleteUser(id)) {
+                PreparedStatement statement = connection.prepareStatement("" +
+                        "delete from t_users where id = ? ");
+                statement.setLong(1, id);
+
+                res = statement.executeUpdate();
+
+                statement.close();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0;
+    }
+
+    public boolean updateUser(Users user){
+        int res = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "update t_users set password = ?, username = ?, role_id = ? where id = ? ");
+            statement.setString(1, user.getPassword());
+            statement.setString(2, user.getUsername());
+            statement.setLong(3, user.getRole().getId());
+            statement.setLong(4, user.getId());
+
+            res = statement.executeUpdate();
+
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0;
+    }
 }

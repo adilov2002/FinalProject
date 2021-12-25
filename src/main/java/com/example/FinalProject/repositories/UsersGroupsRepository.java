@@ -1,6 +1,7 @@
 package com.example.FinalProject.repositories;
 
 import com.example.FinalProject.entities.Groups;
+import org.hibernate.sql.ordering.antlr.GeneratedOrderByFragmentParser;
 
 import javax.ejb.Stateless;
 import java.sql.Connection;
@@ -31,6 +32,41 @@ public class UsersGroupsRepository {
 
         } catch (Exception ignores){}
         return groups;
+    }
+
+    public boolean addGroupsForUserId(Long userId, List<Groups> groups){
+        int res = 0;
+        try {
+            for (Groups g : groups){
+                PreparedStatement statement = connection.prepareStatement("" +
+                        "insert into t_users_t_groups values (?, ?) ");
+                statement.setLong(1, userId);
+                statement.setLong(2, g.getId());
+
+                res = statement.executeUpdate();
+
+                statement.close();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0;
+    }
+
+    public boolean deleteUser(Long id){
+        int res = 0;
+        try {
+            PreparedStatement statement = connection.prepareStatement("" +
+                    "delete from t_users_t_groups where users_id = ? ");
+            statement.setLong(1, id);
+
+            res = statement.executeUpdate();
+
+            statement.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return res > 0;
     }
 
 }

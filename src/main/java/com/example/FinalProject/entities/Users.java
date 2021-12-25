@@ -1,5 +1,6 @@
 package com.example.FinalProject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,8 @@ public class Users {
     @OneToMany(fetch = FetchType.EAGER)
     private List<Groups> groups;
 
+    @JsonIgnore
+    public String getData(){
+        return "#" + id + " " + password + " " + username + " role: " + role.getData() + " groups: " + groups;
+    }
 }
