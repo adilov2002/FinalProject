@@ -11,7 +11,6 @@ public class Repository {
         try{
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/final", "postgres", "postgres");
-            System.out.println("connected");
         } catch (Exception e){
             e.printStackTrace();
         }
