@@ -1,5 +1,6 @@
 package com.example.FinalProject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,9 @@ public class Groups {
 
     @Column(name = "name")
     private String name;
+
+    @JsonIgnore
+    public String getData(){
+        return "#" + id + " " + name;
+    }
 }

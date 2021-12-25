@@ -102,6 +102,8 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
                         isAllowed = true;
                     } else if (path.equals("/vacancies") && u.getGroups().stream().anyMatch(groups -> groups.getName().equals("job-seeker"))){
                         isAllowed = true;
+                    } else if (path.contains("/users") && u.getRole().getName().equals("ROLE_ADMIN")){
+                        isAllowed = true;
                     }
                 }
             }
